@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="15.813073mm"
+   height="15.813073mm"
+   viewBox="0 0 15.813073 15.813073"
+   version="1.1"
+   id="svg12630"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs12627" />
+  <circle
+     style="display:inline;fill:#96c4db;fill-opacity:1;stroke:none;stroke-width:8.56501;paint-order:markers fill stroke"
+     id="circle20728"
+     cx="7.9065366"
+     cy="7.9065366"
+     r="7.9065366" />
+  <circle
+     style="display:inline;fill:#eeceb8;fill-opacity:1;stroke:none;stroke-width:7.45267;paint-order:markers fill stroke"
+     id="circle5805"
+     cx="7.7011685"
+     cy="7.7011685"
+     r="6.8797135" />
+  <g
+     style="display:inline;fill:none;stroke:#a14000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+     id="g5829"
+     transform="matrix(0.43999959,0,0,0.43999959,2.4387987,2.5238732)">
+    <circle
+       cx="12"
+       cy="8"
+       r="7"
+       id="circle5817"
+       style="stroke:#a14000;stroke-opacity:1" />
+    <polyline
+       points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"
+       id="polyline5819"
+       style="stroke:#a14000;stroke-opacity:1" />
+  </g>
+</svg>

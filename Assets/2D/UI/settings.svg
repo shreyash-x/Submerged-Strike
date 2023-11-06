@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="15.813073mm"
+   height="15.813073mm"
+   viewBox="0 0 15.813073 15.813073"
+   version="1.1"
+   id="svg12515"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs12512" />
+  <circle
+     style="display:inline;fill:#96c4db;fill-opacity:1;stroke:none;stroke-width:8.56501;paint-order:markers fill stroke"
+     id="circle20726"
+     cx="7.9065366"
+     cy="7.9065366"
+     r="7.9065366" />
+  <circle
+     style="display:inline;fill:#eeceb8;fill-opacity:1;stroke:none;stroke-width:7.45267;paint-order:markers fill stroke"
+     id="circle5803"
+     cx="8.1118965"
+     cy="7.4958081"
+     r="6.8797135" />
+  <g
+     style="display:inline;fill:none;stroke:#a14000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+     id="g6249"
+     transform="matrix(0.43572049,0,0,0.43572049,2.9859386,2.1644734)">
+    <circle
+       cx="12"
+       cy="12"
+       r="3"
+       id="circle6237"
+       style="stroke:#a14000;stroke-opacity:1" />
+    <path
+       d="m 19.4,15 a 1.65,1.65 0 0 0 0.33,1.82 l 0.06,0.06 a 2,2 0 0 1 0,2.83 2,2 0 0 1 -2.83,0 L 16.9,19.65 a 1.65,1.65 0 0 0 -1.82,-0.33 1.65,1.65 0 0 0 -1,1.51 V 21 a 2,2 0 0 1 -2,2 2,2 0 0 1 -2,-2 V 20.91 A 1.65,1.65 0 0 0 9,19.4 1.65,1.65 0 0 0 7.18,19.73 l -0.06,0.06 a 2,2 0 0 1 -2.83,0 2,2 0 0 1 0,-2.83 L 4.35,16.9 a 1.65,1.65 0 0 0 0.33,-1.82 1.65,1.65 0 0 0 -1.51,-1 H 3 a 2,2 0 0 1 -2,-2 2,2 0 0 1 2,-2 H 3.09 A 1.65,1.65 0 0 0 4.6,9 1.65,1.65 0 0 0 4.27,7.18 L 4.21,7.12 a 2,2 0 0 1 0,-2.83 2,2 0 0 1 2.83,0 L 7.1,4.35 A 1.65,1.65 0 0 0 8.92,4.68 H 9 A 1.65,1.65 0 0 0 10,3.17 V 3 a 2,2 0 0 1 2,-2 2,2 0 0 1 2,2 v 0.09 a 1.65,1.65 0 0 0 1,1.51 1.65,1.65 0 0 0 1.82,-0.33 l 0.06,-0.06 a 2,2 0 0 1 2.83,0 2,2 0 0 1 0,2.83 L 19.65,7.1 A 1.65,1.65 0 0 0 19.32,8.92 V 9 a 1.65,1.65 0 0 0 1.51,1 H 21 a 2,2 0 0 1 2,2 2,2 0 0 1 -2,2 h -0.09 a 1.65,1.65 0 0 0 -1.51,1 z"
+       id="path6239"
+       style="stroke:#a14000;stroke-opacity:1" />
+  </g>
+</svg>

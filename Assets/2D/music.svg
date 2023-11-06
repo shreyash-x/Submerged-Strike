@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg4569"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4566" />
+  <g
+     id="layer1">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.574878;paint-order:markers fill stroke"
+       id="rect4652"
+       width="106.84121"
+       height="34.40023"
+       x="57.475636"
+       y="130.54036"
+       transform="matrix(0.96592583,-0.25881905,0,1,0,0)" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.575282;paint-order:markers fill stroke"
+       id="rect4857"
+       width="15.163623"
+       height="102.65463"
+       x="149.16776"
+       y="164.85632"
+       transform="matrix(0.96584049,-0.25913733,0,1,0,0)" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.57583;paint-order:markers fill stroke"
+       id="rect4941"
+       width="15.165442"
+       height="102.83781"
+       x="57.487606"
+       y="164.66844"
+       transform="matrix(0.96572467,-0.25956862,0,1,0,0)" />
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.564999;paint-order:markers fill stroke"
+       id="path4967"
+       cx="134.36491"
+       cy="224.93825"
+       r="24.352636" />
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.564999;paint-order:markers fill stroke"
+       id="circle5049"
+       cx="45.811466"
+       cy="248.63605"
+       r="24.352636" />
+  </g>
+</svg>

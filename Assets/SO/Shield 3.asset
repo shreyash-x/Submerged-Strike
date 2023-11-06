@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77bea934b711407fa44da1855d902358, type: 3}
+  m_Name: Shield 3
+  m_EditorClassIdentifier: 
+  shieldPrefab: {fileID: 4912224091891586443, guid: 1d004c7926822ab44b7b78621e5b87a1, type: 3}
+  shieldSprite: {fileID: 21300000, guid: 2819188b49e7cc4408fee17088e555e3, type: 3}
+  shieldMaterial: {fileID: 2100000, guid: 547651e459953e04285b2118b0a394cb, type: 2}
+  name: Military Grade Screen
+  description: "300\xB0 Coverage"
+  cost: 750

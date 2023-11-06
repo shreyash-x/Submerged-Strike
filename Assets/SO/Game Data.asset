@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dbaeb7e26ed4dec8a5264f14d0e54d1, type: 3}
+  m_Name: Game Data
+  m_EditorClassIdentifier: 
+  planes:
+  - {fileID: 11400000, guid: 0c98a523bd301a6498504c6a21dcd3c4, type: 2}
+  - {fileID: 11400000, guid: 84abf31b7eb200c4db9e52ec9b6f983e, type: 2}
+  - {fileID: 11400000, guid: 6d928d2053285414da7fb67321ba2840, type: 2}
+  - {fileID: 11400000, guid: 8065a73a1dfd21845addf0fdf618c069, type: 2}
+  shields:
+  - {fileID: 11400000, guid: d5e376174a9fc3948b90ae30194b940a, type: 2}
+  - {fileID: 11400000, guid: 869b0d02ca1e0f94cbeeea37ac7958ee, type: 2}
+  - {fileID: 11400000, guid: 1073bfff28cefdf40b293e0893b59b1d, type: 2}

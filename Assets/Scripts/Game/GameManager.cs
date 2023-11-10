@@ -23,6 +23,7 @@ namespace Game
 
         [SerializeField] internal ModificationController modificationController;
         [SerializeField] internal InputManager inputManager;
+        [SerializeField] internal GameObject backgroundPrefab;
 
         [SerializeField] internal EnemySpawner enemySpawner;
         

@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Clouds
+namespace Plants
 {
     [System.Serializable]
     public struct TileSettings
     {
-        public int maxClouds;
+        public int maxPlants;
         public float radius;
-        public SpriteRenderer[] cloudPrefabs;
-        public float minAlpha;
-        public float maxAlpha;
+        public float scale;
+        public SpriteRenderer[] plantPrefabs;
         [HideInInspector] public Bounds bounds;
     }
     
     public class Tile
     {
-        private readonly List<SpriteRenderer> _clouds;
+        private readonly List<SpriteRenderer> _plants;
         private readonly TileSettings _tileSettings;
 
         public Vector2Int Index;
@@ -24,12 +23,12 @@ namespace Clouds
         public Tile(TileSettings tileSettings)
         {
             _tileSettings = tileSettings;
-            _clouds = new List<SpriteRenderer>();
-            for (int i = 0; i < _tileSettings.maxClouds; i++)
+            _plants = new List<SpriteRenderer>();
+            for (int i = 0; i < _tileSettings.maxPlants; i++)
             {
-                var cloud = Object.Instantiate(tileSettings.cloudPrefabs.SelectRandom());
-                cloud.gameObject.SetActive(false);
-                _clouds.Add(cloud);
+                var plant = Object.Instantiate(tileSettings.plantPrefabs.SelectRandom());
+                plant.gameObject.SetActive(false);
+                _plants.Add(plant);
             }
         }
         
@@ -59,7 +58,7 @@ namespace Clouds
             var selectedPoints = new List<Vector2>();
             var radius = _tileSettings.radius;
             var selected = 0;
-            while (selected < _tileSettings.maxClouds && points.Count > 0)
+            while (selected < _tileSettings.maxPlants && points.Count > 0)
             {
                 var point = points.SelectRandom();
                 selectedPoints.Add(point);
@@ -67,15 +66,15 @@ namespace Clouds
                 selected++;
             }
 
-            int cloudIndex = 0;
+            int plantIndex = 0;
             foreach (var point in selectedPoints)
             {
-                var cloud = _clouds[cloudIndex++];
-                var color = cloud.color;
-                color.a = Random.Range(_tileSettings.minAlpha, _tileSettings.maxAlpha);
-                cloud.color = color;
-                cloud.gameObject.SetActive(true);
-                cloud.transform.position = point + offset;
+                var plant = _plants[plantIndex++];
+                // set scale
+                var scale = _tileSettings.scale;
+                plant.transform.localScale = new Vector3(scale, scale, 1);
+                plant.gameObject.SetActive(true);
+                plant.transform.position = point + offset;
             }
         }
     }

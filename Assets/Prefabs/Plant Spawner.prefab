@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3406960032593719339}
   - component: {fileID: 3406960032593719332}
   m_Layer: 0
-  m_Name: Cloud Spawner
+  m_Name: Plant Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

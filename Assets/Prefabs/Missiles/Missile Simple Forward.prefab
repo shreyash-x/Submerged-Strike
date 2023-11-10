@@ -31,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.6701084, y: 0.6701083, z: 0.6701083}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8757568733731470207}
   m_Father: {fileID: 0}
@@ -170,6 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3094a6d3364fdea7b6a061853c0f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosion: {fileID: 0}
+  showExplosion: 1
   lifeTime: 3
   randomLifeTimeDelta: 1
   dieAnimationTime: 1
@@ -208,6 +211,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 871246862074287489}
   m_RootOrder: 0
@@ -233,7 +237,8 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1816f712014366845a6725c3c45825e1, type: 2}
+  - {fileID: 2100000, guid: daba5687afb2ea24f95d16146dce6cc8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -262,14 +267,14 @@ TrailRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.0026817322
-        value: 0.23915482
-        inSlope: 1.5120587
-        outSlope: 1.5120587
+        time: 0
+        value: 0.5549443
+        inSlope: 0.2931164
+        outSlope: 0.2931164
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.1290316
+        outWeight: 0.39312404
       - serializedVersion: 3
         time: 1
         value: 0
@@ -285,24 +290,24 @@ TrailRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 0.36078432}
-      key1: {r: 0, g: 1, b: 0.8381572, a: 0.7411765}
-      key2: {r: 1, g: 0.89055866, b: 0, a: 1}
-      key3: {r: 1, g: 0.49898702, b: 0.3176471, a: 0}
+      key1: {r: 0.23898178, g: 0.8850601, b: 0.9245283, a: 0.7411765}
+      key2: {r: 0.14503376, g: 0.7600802, b: 0.7924528, a: 1}
+      key3: {r: 0.053773552, g: 0.23865186, b: 0.5, a: 0}
       key4: {r: 0.6698113, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
-      ctime0: 386
-      ctime1: 2699
-      ctime2: 12143
-      ctime3: 20624
+      ctime0: 0
+      ctime1: 11951
+      ctime2: 33346
+      ctime3: 52621
       ctime4: 65535
       ctime5: 0
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 2699
-      atime2: 10794
+      atime1: 14264
+      atime2: 47609
       atime3: 65535
       atime4: 0
       atime5: 0

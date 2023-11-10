@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Clouds
+namespace Plants
 {
-    public class CloudSpawner : MonoBehaviour
+    public class PlantSpawner : MonoBehaviour
     {
         [SerializeField] private TileSettings tileSettings;
         [SerializeField] private int updateGap;

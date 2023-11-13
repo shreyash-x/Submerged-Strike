@@ -11,6 +11,13 @@ namespace Game.Enemy
         public EnemyBase enemy;
         public float probability;
     }
+
+    [System.Serializable]
+    public struct MineCountPair
+    {
+        public EnemyBase mine;
+        public int count;
+    }
     
     [System.Serializable]
     public struct WaveData
@@ -18,6 +25,8 @@ namespace Game.Enemy
         public float waveDuration;
         public float spawnInterval;
         public List<EnemyProbabilityPair> enemies;
+        public List<MineCountPair> mines;
+        public int totalMinesCount;
     }
     
 
@@ -38,6 +47,8 @@ namespace Game.Enemy
         private int _currentWave;
         private float _elapsedSinceWaveStart, _elapsedSinceLastSpawn;
 
+        private int _spawnedMines = 0;
+
         private void OnEnable()
         {
             WaveStart?.Invoke(_currentWave);
@@ -50,6 +61,7 @@ namespace Game.Enemy
             {
                 if(_currentWave != waves.Length - 1) WaveEnd?.Invoke(_currentWave);
                 _elapsedSinceWaveStart = 0;
+                _spawnedMines = 0;
                 _currentWave++;
                 if (_currentWave >= waves.Length) _currentWave = waves.Length - 1;
                 else WaveStart?.Invoke(_currentWave);
@@ -61,6 +73,17 @@ namespace Game.Enemy
                 _elapsedSinceLastSpawn = 0;
                 // spawn
                 var enemyBase = SelectRandomEnemy(waves[_currentWave].enemies);
+                if (_spawnedMines < waves[_currentWave].totalMinesCount)
+                {
+                    var mineBase = SelectNextMine(waves[_currentWave].mines, _spawnedMines);
+                    var minePool = GetPool(mineBase);
+                    var mine = minePool.Borrow(false);
+                    mine.Player = Player;
+                    mine.Pool = minePool;
+                    mine.Friendlies = _active;
+                    mine.GetPool = GetPool;
+                    mine.gameObject.SetActive(true);
+                }
                 var pool = GetPool(enemyBase);
                 var enemy = pool.Borrow(false);
                 enemy.Player = Player;
@@ -96,6 +119,22 @@ namespace Game.Enemy
                 if (sum >= random)
                 {
                     return enemy.enemy;
+                }
+            }
+
+            return null;
+        }
+
+        private static EnemyBase SelectNextMine(IEnumerable<MineCountPair> mines, int spawnedMines)
+        {
+            int counter = spawnedMines;
+            foreach (var mine in mines)
+            {
+                counter -= mine.count;
+
+                if (counter < 0)
+                {
+                    return mine.mine;
                 }
             }
 

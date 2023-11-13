@@ -21,7 +21,7 @@ namespace Game
             _enemyComponent = GetComponent<EnemyBase>();
             _renderer = GetComponent<Renderer>();
             _camera = Camera.main;
-            
+
             _icon = Instantiate(iconPrefab);
             _icon.SetActive(false);
         }

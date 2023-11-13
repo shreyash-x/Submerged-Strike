@@ -79,6 +79,10 @@ namespace Game.Player
             } else if (other.IsPartOfLayer("Coin"))
             {
                 OnCoinHit();
+            } else if (other.IsPartOfLayer("Mine"))
+            {
+                DeadExplosion.ExplodeAt(transform.position);
+                OnMissileHit(this, null);
             }
         }
 

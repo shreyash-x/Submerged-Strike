@@ -191,6 +191,9 @@ namespace Game.Enemy
             } else if(other.IsPartOfLayer("Player"))
             {
                 Pool.Return(this);
+            } else if (other.IsPartOfLayer("Mine"))
+            {
+                Pool.Return(this);
             }
         }
     }

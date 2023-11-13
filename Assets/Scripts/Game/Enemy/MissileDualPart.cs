@@ -189,6 +189,9 @@ namespace Game.Enemy
             } else if(other.IsPartOfLayer("Player"))
             {
                 gameObject.SetActive(false);
+            } else if (other.IsPartOfLayer("Mine"))
+            {
+                Pool.Return(this);
             }
         }
     }

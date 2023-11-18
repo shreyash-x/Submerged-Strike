@@ -20,5 +20,10 @@ namespace Game.Data
         public InputMode inputMode;
         public float effectsVolume;
         public bool playTutorial;
+
+        public bool iconsEnabled;
+        public bool radarEnabled;
+
+        public int minesDestroyed;
     }
 }

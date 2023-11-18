@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Data;
+using UI;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game.Enemy
@@ -13,7 +16,7 @@ namespace Game.Enemy
     }
 
     [System.Serializable]
-    public struct MineCountPair
+    public struct MineData
     {
         public EnemyBase mine;
         public int count;
@@ -25,16 +28,16 @@ namespace Game.Enemy
         public float waveDuration;
         public float spawnInterval;
         public List<EnemyProbabilityPair> enemies;
-        public List<MineCountPair> mines;
-        public int totalMinesCount;
     }
     
 
     public class EnemySpawner : MonoBehaviour
     {
         [SerializeField] private WaveData[] waves;
+        [SerializeField] private List<MineData> mines;
 
         internal GameObject Player;
+        internal bool isIconsEnabled;
 
         public event Action<int> WaveStart;
         public event Action<int> WaveEnd;
@@ -48,10 +51,22 @@ namespace Game.Enemy
         private float _elapsedSinceWaveStart, _elapsedSinceLastSpawn;
 
         private int _spawnedMines = 0;
+        private int _minesDestroyed = 0;
+        private int _totalMines = 0;
+
+        internal DataManager DataManager;
+        internal ResponsiveGameUIManager UIManager;
 
         private void OnEnable()
         {
+            foreach (var mine in mines)
+            {
+                _totalMines += mine.count;
+            }
+
             WaveStart?.Invoke(_currentWave);
+            UIManager.GameUI.SetMinesDestroyed(0, _totalMines);
+            DataManager.MinesDestroyed = 0;
         }
 
         private void Update()
@@ -61,7 +76,6 @@ namespace Game.Enemy
             {
                 if(_currentWave != waves.Length - 1) WaveEnd?.Invoke(_currentWave);
                 _elapsedSinceWaveStart = 0;
-                _spawnedMines = 0;
                 _currentWave++;
                 if (_currentWave >= waves.Length) _currentWave = waves.Length - 1;
                 else WaveStart?.Invoke(_currentWave);
@@ -73,21 +87,25 @@ namespace Game.Enemy
                 _elapsedSinceLastSpawn = 0;
                 // spawn
                 var enemyBase = SelectRandomEnemy(waves[_currentWave].enemies);
-                if (_spawnedMines < waves[_currentWave].totalMinesCount)
+                if (_spawnedMines < _totalMines)
                 {
-                    var mineBase = SelectNextMine(waves[_currentWave].mines, _spawnedMines);
+                    var mineBase = SelectNextMine(mines, _spawnedMines);
                     var minePool = GetPool(mineBase);
                     var mine = minePool.Borrow(false);
                     mine.Player = Player;
                     mine.Pool = minePool;
                     mine.Friendlies = _active;
+                    mine.showIcon = isIconsEnabled;
                     mine.GetPool = GetPool;
                     mine.gameObject.SetActive(true);
+                    _spawnedMines++;
+                    mine.gameObject.GetComponent<MineBasic>().mineDestroyedEvent += MinesDestroyed;
                 }
                 var pool = GetPool(enemyBase);
                 var enemy = pool.Borrow(false);
                 enemy.Player = Player;
                 enemy.Pool = pool;
+                enemy.showIcon = isIconsEnabled;
                 // enemy.EnemySpawner = this;
                 enemy.Friendlies = _active;
                 enemy.GetPool = GetPool;
@@ -125,7 +143,7 @@ namespace Game.Enemy
             return null;
         }
 
-        private static EnemyBase SelectNextMine(IEnumerable<MineCountPair> mines, int spawnedMines)
+        private static EnemyBase SelectNextMine(IEnumerable<MineData> mines, int spawnedMines)
         {
             int counter = spawnedMines;
             foreach (var mine in mines)
@@ -139,6 +157,13 @@ namespace Game.Enemy
             }
 
             return null;
+        }
+
+        private void MinesDestroyed()
+        {
+            _minesDestroyed++;
+            UIManager.GameUI.SetMinesDestroyed(_minesDestroyed, _totalMines);
+            DataManager.MinesDestroyed = _minesDestroyed;
         }
     }
 }

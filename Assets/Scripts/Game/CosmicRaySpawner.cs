@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Game.Enemy;
 using Game.Player;
@@ -10,16 +11,19 @@ namespace Game
     {
         [SerializeField] private float spawnDistance = 50;
         [SerializeField] private float spawnDelay = 1; // wait this much sec before spawning new
-        [SerializeField] private CosmicRay prefab;
+        [SerializeField] private CosmicRay enemyPrefab;
+        [SerializeField] private CosmicRay playerPrefab;
 
         internal PlayerController Player;
         internal EnemySpawner EnemySpawner;
         
-        private Pool<CosmicRay> _pool;
+        private Pool<CosmicRay> _enemyPool;
+        private Pool<CosmicRay> _playerPool;
 
         private void Awake()
         {
-            _pool = new Pool<CosmicRay>(prefab, 10);
+            _enemyPool = new Pool<CosmicRay>(enemyPrefab, 10);
+            _playerPool = new Pool<CosmicRay>(playerPrefab, 10);
         }
 
         public void StartSpawner()
@@ -41,16 +45,28 @@ namespace Game
                 }
 
                 var currentTargetPosition = target.transform.position;
-                var targetPosInFuture = (currentTargetPosition.xy() + target.velocity * (spawnDistance / prefab.maxSpeed));
+                var targetPosInFuture = (currentTargetPosition.xy() + target.velocity * (spawnDistance / enemyPrefab.maxSpeed));
                 var position = currentTargetPosition.xy() + Random.insideUnitCircle.normalized * spawnDistance;
                 var lookDir = targetPosInFuture - position;
-                var ray = _pool.Borrow(false);
+                var ray = _enemyPool.Borrow(false);
                 ray.transform.position = position;
                 ray.transform.rotation = Quaternion.LookRotation(Vector3.forward, lookDir.normalized);
-                ray.Pool = _pool;
+                ray.Pool = _enemyPool;
                 ray.gameObject.SetActive(true);
                 yield return new WaitForSeconds(spawnDelay);
             }
+        }
+
+        public void ShootCosmicRayFromPlayer()
+        {
+            // Shoot a cosmic ray in the opposite direction of the player
+            var position = Player.transform.position.xy();
+            var lookDir = -Player.transform.up;
+            var ray = _playerPool.Borrow(false);
+            ray.transform.position = position + (Vector2)lookDir * 2;
+            ray.transform.rotation = Quaternion.LookRotation(Vector3.forward, lookDir.normalized);
+            ray.Pool = _playerPool;
+            ray.gameObject.SetActive(true);
         }
     }
 }

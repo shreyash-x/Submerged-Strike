@@ -14,6 +14,7 @@ namespace Game.Enemy
         public Func<EnemyBase, Pool<EnemyBase>> GetPool;
         
         public bool showExplosion = true;
+        public bool showIcon = true;
 
         public abstract bool IsActive();
     }

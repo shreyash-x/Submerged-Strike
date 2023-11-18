@@ -173,9 +173,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosion: {fileID: 7937482838394766938, guid: 740352428581a2e4a86536b7455175e0, type: 3}
   showExplosion: 1
+  showIcon: 1
   spawnDistance: 40
   spawnDegree: 180
   noModificationProbability: 0
+  mineDestroyedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11500000, guid: 4aa3f84ba6244e2c96ed45a5aa9e4af3, type: 3}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8218814866997397670
 MonoBehaviour:
   m_ObjectHideFlags: 0

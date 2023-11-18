@@ -7,6 +7,8 @@ namespace UI
     {
         [SerializeField] private TextMeshProUGUI coinText;
         [SerializeField] private TextMeshProUGUI timeText;
+        [SerializeField] private TextMeshProUGUI mineText;
+        [SerializeField] private GameObject radar;
 
         public void SetCoins(int coins)
         {
@@ -16,6 +18,16 @@ namespace UI
         public void SetTime(string time)
         {
             timeText.SetText(time);
+        }
+
+        public void SetMinesDestroyed(int minesDestroyed, int totalMines)
+        {
+            mineText.SetText($"{minesDestroyed}/{totalMines}");
+        }
+
+        public void ToggleRadar(bool enable)
+        {
+            radar.SetActive(enable);
         }
     }
 }

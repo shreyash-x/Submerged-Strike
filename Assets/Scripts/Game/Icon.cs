@@ -35,6 +35,8 @@ namespace Game
         
         private void LateUpdate()
         {
+            if (!_enemyComponent.showIcon) return;
+
             if (Display())
             {
                 if(!_icon.activeSelf) _icon.SetActive(true);

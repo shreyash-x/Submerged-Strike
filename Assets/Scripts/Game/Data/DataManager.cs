@@ -33,6 +33,16 @@ namespace Game.Data
                 Save(_saveData);
             }
         }
+
+        public int MinesDestroyed
+        {
+            get => _saveData.minesDestroyed;
+            set
+            {
+                _saveData.minesDestroyed = value;
+                Save(_saveData);
+            }
+        }
         
         public int TimeCoins
         {
@@ -90,6 +100,26 @@ namespace Game.Data
             set
             {
                 _saveData.playTutorial = value;
+                Save(_saveData);
+            }
+        }
+
+        public bool EnableIcons
+        {
+            get => _saveData.iconsEnabled;
+            set
+            {
+                _saveData.iconsEnabled = value;
+                Save(_saveData);
+            }
+        }
+
+        public bool EnableRadar
+        {
+            get => _saveData.radarEnabled;
+            set
+            {
+                _saveData.radarEnabled = value;
                 Save(_saveData);
             }
         }
@@ -181,9 +211,12 @@ namespace Game.Data
             
             writer.Write(data.timeCoins);
             writer.Write(data.coinsCollected);
+            writer.Write(data.minesDestroyed);
             writer.Write((int)data.inputMode);
             writer.Write(data.effectsVolume);
             writer.Write(data.playTutorial);
+            writer.Write(data.iconsEnabled);
+            writer.Write(data.radarEnabled);
             
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -199,6 +232,8 @@ namespace Game.Data
                 shieldsBought = new List<int>() { 0 },
                 inputMode = InputMode.Joystick,
                 playTutorial = true,
+                iconsEnabled = true,
+                radarEnabled = true,
                 effectsVolume = 1
             };
             
@@ -227,10 +262,13 @@ namespace Game.Data
                 }
 
                 data.coinsCollected = reader.ReadInt32();
+                data.minesDestroyed = reader.ReadInt32();
                 data.timeCoins = reader.ReadInt32();
                 data.inputMode = (InputMode)reader.ReadInt32();
                 data.effectsVolume = reader.ReadSingle();
                 data.playTutorial = reader.ReadBoolean();
+                data.iconsEnabled = reader.ReadBoolean();
+                data.radarEnabled = reader.ReadBoolean();
             }
             catch
             {
@@ -238,6 +276,8 @@ namespace Game.Data
                 data.shieldsBought = new List<int>() { 0 };
                 data.inputMode = InputMode.Joystick;
                 data.playTutorial = true;
+                data.iconsEnabled = true;
+                data.radarEnabled = true;
                 data.effectsVolume = 1;
             }
 

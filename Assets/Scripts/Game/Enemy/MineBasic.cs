@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Game.ModificationSystem;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 namespace Game.Enemy
@@ -14,7 +16,9 @@ namespace Game.Enemy
         [SerializeField] private float spawnDistance;
         [SerializeField] private float spawnDegree;
         [SerializeField] private float noModificationProbability = 0.3f;
-        
+        // Add a serialized field for a mine destroyed event
+        internal Action mineDestroyedEvent;
+
         public GameObject Target { get; set; }
 
         public float XMultiplier { get; set; } = 1;
@@ -67,6 +71,7 @@ namespace Game.Enemy
             var go = Instantiate(explosion);
             go.ExplodeAt(transform.position);
             Pool.Return(this);
+            mineDestroyedEvent.Invoke();
         }
         
         // private void Update()
@@ -127,9 +132,11 @@ namespace Game.Enemy
                     go.ExplodeAt(transform.position);
                 }
                 Pool.Return(this);
+                mineDestroyedEvent.Invoke();
             } else if(other.IsPartOfLayer("Player"))
             {
                 Pool.Return(this);
+                mineDestroyedEvent.Invoke();
             }
         }
     }

@@ -11,6 +11,8 @@ namespace UI
         [SerializeField] private Button keyboardBtn;
         [SerializeField] private Button joystickBtn;
         [SerializeField] private Toggle playTutorialToggle;
+        [SerializeField] private Toggle radarToggle;
+        [SerializeField] private Toggle iconsToggle;
 
         [SerializeField] private Sprite keyboardOnSprite;
         [SerializeField] private Sprite keyboardOffSprite;
@@ -26,6 +28,18 @@ namespace UI
             playTutorialToggle.onValueChanged.AddListener((val) =>
             {
                 dataManager.PlayTutorial = val;
+            });
+
+            radarToggle.SetIsOnWithoutNotify(dataManager.EnableRadar);
+            radarToggle.onValueChanged.AddListener((val) =>
+            {
+                dataManager.EnableRadar = val;
+            });
+
+            iconsToggle.SetIsOnWithoutNotify(dataManager.EnableIcons);
+            iconsToggle.onValueChanged.AddListener((val) =>
+            {
+                dataManager.EnableIcons = val;
             });
             
             if (dataManager.InputMode == InputMode.Joystick)

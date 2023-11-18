@@ -21,7 +21,7 @@ TagManager:
   - Cloud
   - Mine
   - No PP
-  - 
+  - Radar
   - 
   - 
   - 
@@ -44,4 +44,7 @@ TagManager:
     locked: 0
   - name: Explosion
     uniqueID: 1401850467
+    locked: 0
+  - name: Radar
+    uniqueID: 722572057
     locked: 0

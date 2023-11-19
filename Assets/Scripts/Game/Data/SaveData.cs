@@ -25,5 +25,8 @@ namespace Game.Data
         public bool radarEnabled;
 
         public int minesDestroyed;
+
+        // Levels completed
+        public List<int> levelsCompleted;
     }
 }

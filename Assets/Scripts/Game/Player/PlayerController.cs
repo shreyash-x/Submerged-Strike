@@ -10,6 +10,7 @@ namespace Game.Player
     {
         public event Action<PlayerController, CosmicRay> CosmicRayHit;
         public event Action<PlayerController, MissileBasic> MissileHit;
+        public event Action CompleteLevel;
         public event Action CoinHit;
 
         public Vector3 Velocity => _rigidbody.velocity;
@@ -20,6 +21,7 @@ namespace Game.Player
 
         internal InputManager InputManager;
         internal Explosion DeadExplosion;
+        internal bool ReachHaltZone;
         
         private Rigidbody2D _rigidbody;
 
@@ -83,6 +85,9 @@ namespace Game.Player
             {
                 DeadExplosion.ExplodeAt(transform.position);
                 OnMissileHit(this, null);
+            } else if (other.IsPartOfLayer("Haltzone") && ReachHaltZone)
+            {
+                OnHaltZoneReached();
             }
         }
 
@@ -101,6 +106,11 @@ namespace Game.Player
         private void OnMissileHit(PlayerController arg1, MissileBasic arg2)
         {
             MissileHit?.Invoke(arg1, arg2);
+        }
+
+        private void OnHaltZoneReached()
+        {
+            CompleteLevel?.Invoke();
         }
 
         private void OnCoinHit()

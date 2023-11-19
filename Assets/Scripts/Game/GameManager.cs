@@ -6,7 +6,7 @@ using Game.Data;
 using Game.Enemy;
 using Game.Objective;
 using Game.Player;
-using GameAnalyticsSDK;
+// using GameAnalyticsSDK;
 using TMPro;
 using Tutorial;
 using UI;
@@ -20,6 +20,7 @@ namespace Game
 {
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] public int gameLevel = 1;
         [SerializeField] private DataManager dataManager;
         [SerializeField] private GameData gameData;
 
@@ -30,7 +31,13 @@ namespace Game
         [SerializeField] internal GameObject backgroundPrefab;
 
         [SerializeField] internal EnemySpawner enemySpawner;
+        [SerializeField] internal bool minesEnabled = true;
         [SerializeField] internal ObjectiveManager objectiveManager;
+        [SerializeField] internal bool reachHaltZone = true;
+        [SerializeField] internal bool destroyMines = true;
+        [SerializeField] internal int totalMines = 5;
+        [SerializeField] internal bool dodgeMissiles = true;
+        [SerializeField] internal int timeToSurvive = 5;
 
         // [SerializeField] internal MissileSpawner[] missileSpawners;
         [SerializeField] internal CosmicRaySpawner cosmicRaySpawner;
@@ -43,6 +50,7 @@ namespace Game
         [SerializeField] internal ResponsiveGameUIManager uiManager;
         [SerializeField] internal Explosion deadExplosion;
         [SerializeField] private Button shootButton;
+        [SerializeField] private int shootCooldown = 5;
 
         internal PlayerController PlayerController;
         internal Player.Shield Shield;
@@ -67,6 +75,7 @@ namespace Game
             PlayerController = Instantiate(playerPrefab);
             PlayerController.InputManager = inputManager;
             PlayerController.DeadExplosion = deadExplosion;
+            PlayerController.ReachHaltZone = reachHaltZone;
 
             Shield = Instantiate(shieldPrefab);
 
@@ -82,8 +91,19 @@ namespace Game
             enemySpawner.isIconsEnabled = dataManager.EnableIcons;
             enemySpawner.DataManager = dataManager;
             enemySpawner.UIManager = uiManager;
+            enemySpawner.minesEnabled = minesEnabled;
 
             objectiveManager.Player = playerGo;
+            objectiveManager.DataManager = dataManager;
+            objectiveManager.ReachHaltZone = reachHaltZone;
+            objectiveManager.DestroyMines = destroyMines;
+            objectiveManager.TotalMines = totalMines;
+            objectiveManager.DodgeMissiles = dodgeMissiles;
+            objectiveManager.TimeToSurvive = timeToSurvive;
+            if (!reachHaltZone)
+            {
+                objectiveManager.CompleteLevel += LevelCompleted;
+            }
 
             cosmicRaySpawner.Player = PlayerController;
             cosmicRaySpawner.EnemySpawner = enemySpawner;
@@ -117,15 +137,15 @@ namespace Game
                 dataManager.TimeCoins = Mathf.FloorToInt(Time.time - _playStartTime);
                 _currentPlayCoins = dataManager.CoinsCollected + dataManager.TimeCoins;
 
-                GameAnalytics.NewResourceEvent(GAResourceFlowType.Source, "Coins", dataManager.CoinsCollected, "Gameplay", "CoinsCollected");
-                GameAnalytics.NewResourceEvent(GAResourceFlowType.Source, "Coins", dataManager.TimeCoins, "Gameplay", "TimeCoins");
+                // GameAnalytics.NewResourceEvent(GAResourceFlowType.Source, "Coins", dataManager.CoinsCollected, "Gameplay", "CoinsCollected");
+                // GameAnalytics.NewResourceEvent(GAResourceFlowType.Source, "Coins", dataManager.TimeCoins, "Gameplay", "TimeCoins");
 
-                GameAnalytics.NewProgressionEvent(GAProgressionStatus.Fail,
-                    $"Plane_{dataManager.EquippedPlane}",
-                    $"Shield_{dataManager.EquippedShield}",
-                    $"Wave_{_lastWave}",
-                    (int)(Time.time - _waveStartTime)
-                );
+                // GameAnalytics.NewProgressionEvent(GAProgressionStatus.Fail,
+                //     $"Plane_{dataManager.EquippedPlane}",
+                //     $"Shield_{dataManager.EquippedShield}",
+                //     $"Wave_{_lastWave}",
+                //     (int)(Time.time - _waveStartTime)
+                // );
 
                 dataManager.Coins += _currentPlayCoins;
                 uiManager.DeadMenu.Display(dataManager.TimeCoins, dataManager.CoinsCollected, dataManager.Coins);
@@ -137,26 +157,28 @@ namespace Game
                 Shield = null;
             };
 
+            PlayerController.CompleteLevel += LevelCompleted;
+
             // NOTE works only when WaveEnd called before next WaveStart
             enemySpawner.WaveStart += (wave) =>
             {
-                GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start,
-                    $"Plane_{dataManager.EquippedPlane}",
-                    $"Shield_{dataManager.EquippedShield}",
-                    $"Wave_{wave}"
-                );
+                // GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start,
+                //     $"Plane_{dataManager.EquippedPlane}",
+                //     $"Shield_{dataManager.EquippedShield}",
+                //     $"Wave_{wave}"
+                // );
                 _lastWave = wave;
                 _waveStartTime = Time.time;
             };
 
             enemySpawner.WaveEnd += (wave) =>
             {
-                GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete,
-                    $"Plane_{dataManager.EquippedPlane}",
-                    $"Shield_{dataManager.EquippedShield}",
-                    $"Wave_{wave}",
-                    (int)(Time.time - _waveStartTime)
-                );
+                // GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete,
+                //     $"Plane_{dataManager.EquippedPlane}",
+                //     $"Shield_{dataManager.EquippedShield}",
+                //     $"Wave_{wave}",
+                //     (int)(Time.time - _waveStartTime)
+                // );
             };
 
 
@@ -165,8 +187,8 @@ namespace Game
                 // Shoot a cosmic ray in the opposite direction of the player
                 cosmicRaySpawner.ShootCosmicRayFromPlayer();
 
-                // Start coroutine to enable button after 5 seconds
-                StartCoroutine(EnableButtonAfterSeconds(5, shootButton));
+                // Start coroutine to enable button after shootCooldown seconds
+                StartCoroutine(EnableButtonAfterSeconds(shootCooldown, shootButton));
             });
         }
 
@@ -174,7 +196,6 @@ namespace Game
         {
             inputManager.SetInputMode(dataManager.InputMode);
             _playing = true;
-
             if (dataManager.PlayTutorial)
             {
                 dataManager.PlayTutorial = false;
@@ -232,7 +253,7 @@ namespace Game
         {
             dataManager.Coins += _currentPlayCoins;
 
-            GameAnalytics.NewResourceEvent(GAResourceFlowType.Source, "Coins", _currentPlayCoins, "Ads", "EndGameReward");
+            // GameAnalytics.NewResourceEvent(GAResourceFlowType.Source, "Coins", _currentPlayCoins, "Ads", "EndGameReward");
 
             _currentPlayCoins = 0;
             uiManager.DeadMenu.UpdateTotalCoins(dataManager.Coins);
@@ -277,5 +298,43 @@ namespace Game
             // Show SVG Image
             svgImage.enabled = true;
         }
+
+        public void LevelCompleted()
+        {
+            _playing = false;
+            Destroy(PlayerController.gameObject);
+            Destroy(Shield.gameObject);
+
+            var ui = GameObject.FindObjectsOfType<Canvas>();
+            foreach (var canvas in ui)
+            {
+                canvas.gameObject.SetActive(false);
+            }
+
+            dataManager.TimeCoins = Mathf.FloorToInt(Time.time - _playStartTime);
+            _currentPlayCoins = dataManager.CoinsCollected + dataManager.TimeCoins;
+
+            // GameAnalytics.NewResourceEvent(GAResourceFlowType.Source, "Coins", dataManager.CoinsCollected, "Gameplay", "CoinsCollected");
+            // GameAnalytics.NewResourceEvent(GAResourceFlowType.Source, "Coins", dataManager.TimeCoins, "Gameplay", "TimeCoins");
+
+            // GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete,
+            //     $"Plane_{dataManager.EquippedPlane}",
+            //     $"Shield_{dataManager.EquippedShield}",
+            //     $"Wave_{_lastWave}",
+            //     (int)(Time.time - _waveStartTime)
+            // );
+
+            dataManager.Coins += _currentPlayCoins;
+            dataManager.CompleteLevel(gameLevel);
+            uiManager.MissionCompletedMenu.Display(dataManager.TimeCoins, dataManager.CoinsCollected, dataManager.Coins);
+
+            dataManager.CoinsCollected = 0;
+            dataManager.MinesDestroyed = 0;
+            dataManager.TimeCoins = 0;
+            PlayerController = null;
+            Shield = null;
+        }
+
+
     }
 }

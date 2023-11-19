@@ -21,7 +21,7 @@ namespace Game.Enemy
         public EnemyBase mine;
         public int count;
     }
-    
+
     [System.Serializable]
     public struct WaveData
     {
@@ -29,7 +29,7 @@ namespace Game.Enemy
         public float spawnInterval;
         public List<EnemyProbabilityPair> enemies;
     }
-    
+
 
     public class EnemySpawner : MonoBehaviour
     {
@@ -43,7 +43,7 @@ namespace Game.Enemy
         public event Action<int> WaveEnd;
 
         private readonly Dictionary<GameObject, Pool<EnemyBase>> _pools = new Dictionary<GameObject, Pool<EnemyBase>>();
-        
+
         private readonly List<GameObject> _active = new List<GameObject>();
         public IReadOnlyList<GameObject> Active => _active;
 
@@ -56,17 +56,21 @@ namespace Game.Enemy
 
         internal DataManager DataManager;
         internal ResponsiveGameUIManager UIManager;
+        internal bool minesEnabled;
 
         private void OnEnable()
         {
-            foreach (var mine in mines)
+            if (minesEnabled)
             {
-                _totalMines += mine.count;
+                foreach (var mine in mines)
+                {
+                    _totalMines += mine.count;
+                }
+                UIManager.GameUI.SetMinesDestroyed(0, _totalMines);
+                DataManager.MinesDestroyed = 0;
             }
-
             WaveStart?.Invoke(_currentWave);
-            UIManager.GameUI.SetMinesDestroyed(0, _totalMines);
-            DataManager.MinesDestroyed = 0;
+
         }
 
         private void Update()
@@ -74,7 +78,7 @@ namespace Game.Enemy
             _elapsedSinceWaveStart += Time.deltaTime;
             if (_elapsedSinceWaveStart >= waves[_currentWave].waveDuration)
             {
-                if(_currentWave != waves.Length - 1) WaveEnd?.Invoke(_currentWave);
+                if (_currentWave != waves.Length - 1) WaveEnd?.Invoke(_currentWave);
                 _elapsedSinceWaveStart = 0;
                 _currentWave++;
                 if (_currentWave >= waves.Length) _currentWave = waves.Length - 1;
@@ -87,19 +91,22 @@ namespace Game.Enemy
                 _elapsedSinceLastSpawn = 0;
                 // spawn
                 var enemyBase = SelectRandomEnemy(waves[_currentWave].enemies);
-                if (_spawnedMines < _totalMines)
+                if (minesEnabled)
                 {
-                    var mineBase = SelectNextMine(mines, _spawnedMines);
-                    var minePool = GetPool(mineBase);
-                    var mine = minePool.Borrow(false);
-                    mine.Player = Player;
-                    mine.Pool = minePool;
-                    mine.Friendlies = _active;
-                    mine.showIcon = isIconsEnabled;
-                    mine.GetPool = GetPool;
-                    mine.gameObject.SetActive(true);
-                    _spawnedMines++;
-                    mine.gameObject.GetComponent<MineBasic>().mineDestroyedEvent += MinesDestroyed;
+                    if (_spawnedMines < _totalMines)
+                    {
+                        var mineBase = SelectNextMine(mines, _spawnedMines);
+                        var minePool = GetPool(mineBase);
+                        var mine = minePool.Borrow(false);
+                        mine.Player = Player;
+                        mine.Pool = minePool;
+                        mine.Friendlies = _active;
+                        mine.showIcon = isIconsEnabled;
+                        mine.GetPool = GetPool;
+                        mine.gameObject.SetActive(true);
+                        _spawnedMines++;
+                        mine.gameObject.GetComponent<MineBasic>().mineDestroyedEvent += MinesDestroyed;
+                    }
                 }
                 var pool = GetPool(enemyBase);
                 var enemy = pool.Borrow(false);

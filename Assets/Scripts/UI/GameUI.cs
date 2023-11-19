@@ -22,6 +22,11 @@ namespace UI
 
         public void SetMinesDestroyed(int minesDestroyed, int totalMines)
         {
+            if (totalMines > 1000)
+            {
+                mineText.SetText($"{minesDestroyed}");
+                return;
+            }
             mineText.SetText($"{minesDestroyed}/{totalMines}");
         }
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using GameAnalyticsSDK;
+// using GameAnalyticsSDK;
 using UnityEngine;
 
 namespace Game.Data
@@ -124,6 +124,20 @@ namespace Game.Data
             }
         }
 
+        public bool HasCompletedLevel(int level)
+        {
+            return _saveData.levelsCompleted.Contains(level);
+        }
+
+        public void CompleteLevel(int level)
+        {
+            if (!HasCompletedLevel(level))
+            {
+                _saveData.levelsCompleted.Add(level);
+                Save(_saveData);
+            }
+        }
+
         public bool HasBoughtPlane(int i)
         {
             return _saveData.planesBought.Contains(i);
@@ -149,7 +163,7 @@ namespace Game.Data
             _saveData.coins -= cost;
             _saveData.planesBought.Add(index);
             
-            GameAnalytics.NewResourceEvent(GAResourceFlowType.Sink, "Coins", cost, "Plane", $"Plane_{index}");
+            // GameAnalytics.NewResourceEvent(GAResourceFlowType.Sink, "Coins", cost, "Plane", $"Plane_{index}");
 
             if (equip)
             {
@@ -171,7 +185,7 @@ namespace Game.Data
             var cost = gameData.shields[index].cost;
             if (cost > Coins) return false;
             
-            GameAnalytics.NewResourceEvent(GAResourceFlowType.Sink, "Coins", cost, "Plane", $"Plane_{index}");
+            // GameAnalytics.NewResourceEvent(GAResourceFlowType.Sink, "Coins", cost, "Plane", $"Plane_{index}");
             
             _saveData.coins -= cost;
             _saveData.shieldsBought.Add(index);
@@ -208,6 +222,12 @@ namespace Game.Data
                 writer.Write(data.shieldsBought.Count);
                 foreach (var i in data.shieldsBought) writer.Write(i);
             } else writer.Write(0);
+
+            if (data.levelsCompleted != null)
+            {
+                writer.Write(data.levelsCompleted.Count);
+                foreach (var i in data.levelsCompleted) writer.Write(i);
+            } else writer.Write(0);
             
             writer.Write(data.timeCoins);
             writer.Write(data.coinsCollected);
@@ -230,6 +250,7 @@ namespace Game.Data
             {
                 planesBought = new List<int>() { 0 },
                 shieldsBought = new List<int>() { 0 },
+                levelsCompleted = new List<int>(),
                 inputMode = InputMode.Joystick,
                 playTutorial = true,
                 iconsEnabled = true,
@@ -261,6 +282,13 @@ namespace Game.Data
                     data.shieldsBought.Add(reader.ReadInt32());
                 }
 
+                count = reader.ReadInt32();
+                data.levelsCompleted = new List<int>(count);
+                for (var i = 0; i < count; i++)
+                {
+                    data.levelsCompleted.Add(reader.ReadInt32());
+                }
+
                 data.coinsCollected = reader.ReadInt32();
                 data.minesDestroyed = reader.ReadInt32();
                 data.timeCoins = reader.ReadInt32();
@@ -274,6 +302,7 @@ namespace Game.Data
             {
                 data.planesBought = new List<int>() { 0 };
                 data.shieldsBought = new List<int>() { 0 };
+                data.levelsCompleted = new List<int>();
                 data.inputMode = InputMode.Joystick;
                 data.playTutorial = true;
                 data.iconsEnabled = true;

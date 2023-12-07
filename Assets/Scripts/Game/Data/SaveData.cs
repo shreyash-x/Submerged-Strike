@@ -28,5 +28,7 @@ namespace Game.Data
 
         // Levels completed
         public List<int> levelsCompleted;
+
+        public int difficulty;
     }
 }

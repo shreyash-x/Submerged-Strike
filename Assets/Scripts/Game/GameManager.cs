@@ -9,6 +9,7 @@ using Game.Player;
 // using GameAnalyticsSDK;
 using TMPro;
 using Tutorial;
+using Narrative;
 using UI;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -25,6 +26,7 @@ namespace Game
         [SerializeField] private GameData gameData;
 
         [SerializeField] internal TutorialManager tutorialManager;
+        [SerializeField] internal NarrativeManager narrativeManager;
 
         [SerializeField] internal ModificationController modificationController;
         [SerializeField] internal InputManager inputManager;
@@ -51,6 +53,7 @@ namespace Game
         [SerializeField] internal Explosion deadExplosion;
         [SerializeField] private Button shootButton;
         [SerializeField] private int shootCooldown = 5;
+        [SerializeField] private Button pauseButton;
 
         internal PlayerController PlayerController;
         internal Player.Shield Shield;
@@ -61,6 +64,7 @@ namespace Game
         private int _currentPlayCoins = 0;
 
         private bool _isPlayingTutorial = false;
+        private bool _isPlayingNarrative = false;
 
         private int _lastWave;
         private float _waveStartTime;
@@ -97,9 +101,9 @@ namespace Game
             objectiveManager.DataManager = dataManager;
             objectiveManager.ReachHaltZone = reachHaltZone;
             objectiveManager.DestroyMines = destroyMines;
-            objectiveManager.TotalMines = totalMines;
+            objectiveManager.TotalMines = (dataManager.Difficulty + 1) * totalMines;
             objectiveManager.DodgeMissiles = dodgeMissiles;
-            objectiveManager.TimeToSurvive = timeToSurvive;
+            objectiveManager.TimeToSurvive = timeToSurvive * (dataManager.Difficulty + 1);
             if (!reachHaltZone)
             {
                 objectiveManager.CompleteLevel += LevelCompleted;
@@ -121,6 +125,8 @@ namespace Game
             dataManager.CoinsCollected = 0;
             dataManager.MinesDestroyed = 0;
             dataManager.TimeCoins = 0;
+
+            pauseButton.onClick.AddListener(pauseGame);
 
             PlayerController.MissileHit += (controller, _) =>
             {
@@ -188,6 +194,7 @@ namespace Game
                 cosmicRaySpawner.ShootCosmicRayFromPlayer();
 
                 // Start coroutine to enable button after shootCooldown seconds
+                var cooldownTime = (dataManager.Difficulty+1) + shootCooldown;
                 StartCoroutine(EnableButtonAfterSeconds(shootCooldown, shootButton));
             });
         }
@@ -196,27 +203,37 @@ namespace Game
         {
             inputManager.SetInputMode(dataManager.InputMode);
             _playing = true;
-            if (dataManager.PlayTutorial)
-            {
-                dataManager.PlayTutorial = false;
 
-                _isPlayingTutorial = true;
-                tutorialManager.TutorialComplete += () =>
-                {
-                    _isPlayingTutorial = false;
-                    _playStartTime = Time.time;
-                    coinManager.StartSpawning();
-                };
-                tutorialManager.StartTutorial();
-            }
-            else
+
+            // start with narrative
+            _isPlayingNarrative = true;
+            narrativeManager.NarrativeComplete += () =>
             {
-                StartMissileSpawner();
-                StartRaySpawner();
-                StartObjectiveCreation();
-                coinManager.StartSpawning();
-                _playStartTime = Time.time;
-            }
+                _isPlayingNarrative = false;
+                if (dataManager.PlayTutorial)
+                {
+                    dataManager.PlayTutorial = false;
+
+                    _isPlayingTutorial = true;
+                    tutorialManager.TutorialComplete += () =>
+                    {
+                        _isPlayingTutorial = false;
+                        StartObjectiveCreation();
+                        _playStartTime = Time.time;
+                        coinManager.StartSpawning();
+                    };
+                    tutorialManager.StartTutorial();
+                }
+                else
+                {
+                    StartMissileSpawner();
+                    StartRaySpawner();
+                    StartObjectiveCreation();
+                    coinManager.StartSpawning();
+                    _playStartTime = Time.time;
+                }
+            };
+            narrativeManager.StartNarrative();
         }
 
         private void Update()
@@ -225,7 +242,7 @@ namespace Game
 
             AudioListener.volume = dataManager.EffectsVolume;
             var elapsed = Time.time - _playStartTime;
-            if (!_isPlayingTutorial)
+            if (!_isPlayingTutorial && !_isPlayingNarrative)
             {
                 uiManager.GameUI.SetTime(TimeSpan.FromSeconds(elapsed)
                     .ToString(@"hh\:mm\:ss", CultureInfo.InvariantCulture));
@@ -326,15 +343,40 @@ namespace Game
 
             dataManager.Coins += _currentPlayCoins;
             dataManager.CompleteLevel(gameLevel);
-            uiManager.MissionCompletedMenu.Display(dataManager.TimeCoins, dataManager.CoinsCollected, dataManager.Coins);
+            if (destroyMines)
+            {
+                _isPlayingNarrative = true;
+                narrativeManager.GameComplete += () =>
+                {
+                    _isPlayingNarrative = false;
+                    uiManager.MissionCompletedMenu.Display(dataManager.TimeCoins, dataManager.CoinsCollected, dataManager.Coins);
+                    dataManager.CoinsCollected = 0;
+                    dataManager.MinesDestroyed = 0;
+                    dataManager.TimeCoins = 0;
+                    PlayerController = null;
+                    Shield = null;
+                };
+                narrativeManager.StartGameComplete();
+            }
+            else
+            {
+                uiManager.MissionCompletedMenu.Display(dataManager.TimeCoins, dataManager.CoinsCollected, dataManager.Coins);
 
-            dataManager.CoinsCollected = 0;
-            dataManager.MinesDestroyed = 0;
-            dataManager.TimeCoins = 0;
-            PlayerController = null;
-            Shield = null;
+                dataManager.CoinsCollected = 0;
+                dataManager.MinesDestroyed = 0;
+                dataManager.TimeCoins = 0;
+                PlayerController = null;
+                Shield = null;
+            }
         }
 
+        public void pauseGame()
+        {
+            Time.timeScale = 0;
+            var TimeCoins = Mathf.FloorToInt(Time.time - _playStartTime);
+            var totalCoins = dataManager.CoinsCollected + TimeCoins;
+            uiManager.PauseMenu.Display(TimeCoins, dataManager.CoinsCollected, totalCoins + dataManager.Coins);
+        }
 
     }
 }

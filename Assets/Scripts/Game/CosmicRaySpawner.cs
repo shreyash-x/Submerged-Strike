@@ -63,7 +63,7 @@ namespace Game
             var position = Player.transform.position.xy();
             var lookDir = -Player.transform.up;
             var ray = _playerPool.Borrow(false);
-            ray.transform.position = position + (Vector2)lookDir * 2;
+            ray.transform.position = position + (Vector2)lookDir * 1.5f;
             ray.transform.rotation = Quaternion.LookRotation(Vector3.forward, lookDir.normalized);
             ray.Pool = _playerPool;
             ray.gameObject.SetActive(true);

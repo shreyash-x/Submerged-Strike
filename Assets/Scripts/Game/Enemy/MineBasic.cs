@@ -111,19 +111,13 @@ namespace Game.Enemy
         {
             if (other.IsPartOfLayer("CosmicRay"))
             {
-                var random = Random.Range(0f, 1f);
-                if (random <= noModificationProbability)
-                {
-                    foreach (var modification in _modifications)
-                    {
-                        modification.modification.ResetOn(this);
-                    }
-                }
-                else
+                // check if tag is "PlayerCosmic"
+                if (other.CompareTag("PlayerCosmic"))
                 {
                     _modifications.SelectRandomP().ApplyOn(this);
                 }
-            } else if (other.IsPartOfLayer("Missile"))
+            }
+            else if (other.IsPartOfLayer("Missile"))
             {
                 if (showExplosion)
                 {

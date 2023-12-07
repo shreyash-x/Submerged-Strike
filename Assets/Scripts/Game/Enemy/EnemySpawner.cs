@@ -64,8 +64,9 @@ namespace Game.Enemy
             {
                 foreach (var mine in mines)
                 {
-                    _totalMines += mine.count;
+                    _totalMines += mine.count * (DataManager.Difficulty + 1);
                 }
+                Debug.Log("Total Mines: " + _totalMines);
                 UIManager.GameUI.SetMinesDestroyed(0, _totalMines);
                 DataManager.MinesDestroyed = 0;
             }
@@ -86,7 +87,7 @@ namespace Game.Enemy
             }
 
             _elapsedSinceLastSpawn += Time.deltaTime;
-            if (_elapsedSinceLastSpawn >= waves[_currentWave].spawnInterval)
+            if (_elapsedSinceLastSpawn >= (waves[_currentWave].spawnInterval - (DataManager.Difficulty * 0.5f)))
             {
                 _elapsedSinceLastSpawn = 0;
                 // spawn
@@ -95,7 +96,7 @@ namespace Game.Enemy
                 {
                     if (_spawnedMines < _totalMines)
                     {
-                        var mineBase = SelectNextMine(mines, _spawnedMines);
+                        var mineBase = SelectNextMine(mines, _spawnedMines, DataManager.Difficulty);
                         var minePool = GetPool(mineBase);
                         var mine = minePool.Borrow(false);
                         mine.Player = Player;
@@ -150,12 +151,12 @@ namespace Game.Enemy
             return null;
         }
 
-        private static EnemyBase SelectNextMine(IEnumerable<MineData> mines, int spawnedMines)
+        private static EnemyBase SelectNextMine(IEnumerable<MineData> mines, int spawnedMines, int difficulty)
         {
             int counter = spawnedMines;
             foreach (var mine in mines)
             {
-                counter -= mine.count;
+                counter -= mine.count * (difficulty + 1);
 
                 if (counter < 0)
                 {

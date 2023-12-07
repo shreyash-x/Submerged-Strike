@@ -36,7 +36,7 @@ namespace Game.Objective
                 currentProgress = 0.25f;
                 var angle = Random.Range(0, 360);
                 var dir = Quaternion.AngleAxis(angle, Vector3.forward) * -Player.transform.up;
-                objectivePosition = Player.transform.position + dir * destinationDistance;
+                objectivePosition = Player.transform.position + dir * (destinationDistance * (DataManager.Difficulty + 1));
                 var distance = dir * destinationDistance;
                 var haltZone = Instantiate(haltZonePrefab);
                 haltZone.transform.position = objectivePosition;

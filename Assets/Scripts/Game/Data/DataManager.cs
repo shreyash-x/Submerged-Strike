@@ -124,6 +124,16 @@ namespace Game.Data
             }
         }
 
+        public int Difficulty
+        {
+            get => _saveData.difficulty;
+            set
+            {
+                _saveData.difficulty = value;
+                Save(_saveData);
+            }
+        }
+
         public bool HasCompletedLevel(int level)
         {
             return _saveData.levelsCompleted.Contains(level);
@@ -237,11 +247,12 @@ namespace Game.Data
             writer.Write(data.playTutorial);
             writer.Write(data.iconsEnabled);
             writer.Write(data.radarEnabled);
+            writer.Write(data.difficulty);
             
-            if (Application.platform == RuntimePlatform.WebGLPlayer)
-            {
-                SyncFiles();
-            }
+            // if (Application.platform == RuntimePlatform.WebGLPlayer)
+            // {
+            //     SyncFiles();
+            // }
         }
 
         public static SaveData Load()
@@ -255,7 +266,8 @@ namespace Game.Data
                 playTutorial = true,
                 iconsEnabled = true,
                 radarEnabled = true,
-                effectsVolume = 1
+                effectsVolume = 1,
+                difficulty = 0
             };
             
             using var reader = new BinaryReader(File.Open(FileName, FileMode.Open, FileAccess.Read));
@@ -297,6 +309,7 @@ namespace Game.Data
                 data.playTutorial = reader.ReadBoolean();
                 data.iconsEnabled = reader.ReadBoolean();
                 data.radarEnabled = reader.ReadBoolean();
+                data.difficulty = reader.ReadInt32();
             }
             catch
             {
@@ -307,16 +320,17 @@ namespace Game.Data
                 data.playTutorial = true;
                 data.iconsEnabled = true;
                 data.radarEnabled = true;
+                data.difficulty = 0;
                 data.effectsVolume = 1;
             }
 
             return data;
         }
         
-        [DllImport("__Internal")]
-        private static extern void SyncFiles();
+        // [DllImport("__Internal")]
+        // private static extern void SyncFiles();
 
-        [DllImport("__Internal")]
-        private static extern void WindowAlert(string message); 
+        // [DllImport("__Internal")]
+        // private static extern void WindowAlert(string message); 
     }
 }

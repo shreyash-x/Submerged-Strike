@@ -28,6 +28,7 @@ namespace UI
         }
         public void LoadMenu()
         {
+            Time.timeScale = 1;
             StartCoroutine(TransitionOutHome());
         }
 

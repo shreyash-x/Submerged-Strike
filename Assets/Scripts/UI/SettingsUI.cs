@@ -2,6 +2,7 @@
 using Game.Data;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace UI
 {
@@ -19,6 +20,9 @@ namespace UI
         
         [SerializeField] private Sprite joystickOnSprite;
         [SerializeField] private Sprite joystickOffSprite;
+
+        // TextMeshProUGUI Dropdown
+        [SerializeField] private TMP_Dropdown difficultyDropdown;
 
         [SerializeField] private DataManager dataManager;
 
@@ -40,6 +44,12 @@ namespace UI
             iconsToggle.onValueChanged.AddListener((val) =>
             {
                 dataManager.EnableIcons = val;
+            });
+
+            difficultyDropdown.value = (int)dataManager.Difficulty;
+            difficultyDropdown.onValueChanged.AddListener((val) =>
+            {
+                dataManager.Difficulty = (int)val;
             });
             
             if (dataManager.InputMode == InputMode.Joystick)

@@ -49,7 +49,7 @@ namespace UI
             }
 
             // Easter egg level
-            if (true)
+            if (dataManager.HasCompletedLevel(numberOfLevels))
             {
                 easterEggLevel.gameObject.SetActive(true);
                 easterEggLevel.interactable = true;

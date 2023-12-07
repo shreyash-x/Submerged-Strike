@@ -10,6 +10,7 @@ namespace UI
         [SerializeField] private DeadMenu deadLandscapeMenu;
         [SerializeField] private MissionCompletedMenu completedMenu;
         [SerializeField] private StoreUI landscapeStoreUI;
+        [SerializeField] private PauseMenu pauseMenu;
 
         private static bool IsPortrait => Screen.height >= Screen.width;
 
@@ -17,6 +18,7 @@ namespace UI
         public DeadMenu DeadMenu => IsPortrait ? deadPortraitMenu : deadLandscapeMenu;
         public MissionCompletedMenu MissionCompletedMenu => completedMenu;
         public StoreUI StoreUI => landscapeStoreUI;
+        public PauseMenu PauseMenu => pauseMenu;
 
         private bool _isPortrait;
 
@@ -31,6 +33,7 @@ namespace UI
 
             completedMenu.gameObject.SetActive(false);
             landscapeStoreUI.gameObject.SetActive(false);
+            pauseMenu.gameObject.SetActive(false);
         }
 
         public void SetStoreUIActive(bool active)

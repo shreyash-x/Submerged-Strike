@@ -13,6 +13,7 @@ namespace UI
         [SerializeField] private TextMeshProUGUI baseCoinText;
         [SerializeField] private TextMeshProUGUI totalCoinText;
         [SerializeField] private TextMeshProUGUI coinText;
+        [SerializeField] private TextMeshProUGUI collectedCoinText;
 
         [Space]
         [SerializeField] private Button replayButton;
@@ -31,6 +32,7 @@ namespace UI
             
             baseCoinText.SetText($"+{timeCoins}");
             totalCoinText.SetText($"{total}");
+            collectedCoinText.SetText($"+{coinsCollected}");
             
             coinText.SetText($"{totalCoins}");
                         
